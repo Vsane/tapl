@@ -1,0 +1,1 @@
+C:\Users\17324\Desktop\tapl\arith\target\debug\arith-ae5b55fc3d2316aa.exe: C:\Users\17324\Desktop\tapl\arith\src\arith.rs C:\Users\17324\Desktop\tapl\arith\src\lib.rs C:\Users\17324\Desktop\tapl\arith\src\parser.rs

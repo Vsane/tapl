@@ -51,26 +51,23 @@ fn is_numeric_val(t: &Term) -> bool {
     }
 }
 
-pub fn eval1(term: Term) -> Result<Term, EvalError> {
+fn eval1(term: Term) -> Result<Term, EvalError> {
     match term {
-        Term::True => Ok(Term::True),
-        Term::False => Ok(Term::False),
-        Term::Zero => Ok(Term::Zero),
         Term::If(term1, term2, term3) => {
             match *term1 {
                 Term::True => {
-                    Ok(eval1(*term2)?)
+                    Ok(*term2)
                 }
                 Term::False => {
                     if term3 != None {
-                        Ok(eval1(*(term3.unwrap()))?)
+                        Ok(*(term3.unwrap()))
                     } else {
                         Err(EvalError::NoElse(*term1))
                     }
                 }
                 _ => {
                     let tmp_term = Term::If(Box::new(eval1(*term1)?), term2, term3);
-                    Ok(eval1(tmp_term)?)
+                    Ok(tmp_term)
                 }
             }
         }
@@ -84,7 +81,7 @@ pub fn eval1(term: Term) -> Result<Term, EvalError> {
                 }
                 _ => {
                     let tmp_term = Term::IsZero(Box::from(eval1(*term1)?));
-                    Ok(eval1(tmp_term)?)
+                    Ok(tmp_term)
                 }
             }
         }
@@ -94,18 +91,103 @@ pub fn eval1(term: Term) -> Result<Term, EvalError> {
                     Ok(Term::Zero)
                 }
                 Term::Succ(term2) if is_numeric_val((*term2).borrow())  => {
-                    Ok(eval1(*term2)?)
+                    Ok(*term2)
                 }
                 _ => {
                     let tmp_term = Term::Pred(Box::from(eval1(*term1)?));
-                    Ok(eval1(tmp_term)?)
+                    Ok(tmp_term)
                 }
             }
-
         }
         Term::Succ(term1) => {
-            let tmp_term = Term::Succ(Box::from(eval1(*term1)?));
-            Ok(tmp_term)
+            match *term1 {
+                Term::Pred(term2) => Ok(Term::Succ(Box::from(eval1(Term::Pred(term2)).unwrap()))),
+                _ => Err(EvalError::NoRule(*term1))
+            }
         }
+        term1 => Err(EvalError::NoRule(term1))
     }
 }
+
+pub fn eval(term: Term) -> Term {
+    match eval1(term.clone()) {
+        Ok(term1) => {
+            eval(term1)
+        }
+        Err(_) => term,
+    }
+}
+
+
+fn is_val(t: &Term) -> bool {
+    match t.clone() {
+        Term::True | Term::False => true,
+        ref t1 if is_numeric_val(t1) => true,
+        _ => false,
+    }
+}
+
+
+pub fn big_eval(term: Term) -> Term {
+    if is_val(term.borrow()) {
+        return term;
+    }
+
+    match term {
+        Term::If(term1, term2, term3) => {
+            match *term1 {
+                Term::True => {
+                    big_eval(*term2)
+                }
+                Term::False => {
+                    if term3 != None {
+                        big_eval(*term3.unwrap())
+                    } else {
+                        panic!("Err~~");
+                    }
+                }
+                _ => {
+                    let tmp_term = Term::If(Box::new(big_eval(*term1)), term2, term3);
+                    big_eval(tmp_term)
+                }
+            }
+        }
+        Term::IsZero(term1) => {
+            match *term1 {
+                Term::Zero => {
+                    Term::True
+                }
+                Term::Succ(term2) if is_numeric_val((*term2).borrow()) => {
+                    Term::False
+                }
+                _ => {
+                    let tmp_term = Term::IsZero(Box::from(big_eval(*term1)));
+                    big_eval(tmp_term)
+                }
+            }
+        }
+        Term::Pred(term1) => {
+            match *term1 {
+                Term::Zero => {
+                    Term::Zero
+                }
+                Term::Succ(term2) if is_numeric_val((*term2).borrow())  => {
+                    big_eval(*term2)
+                }
+                _ => {
+                    let tmp_term = Term::Pred(Box::from(big_eval(*term1)));
+                    big_eval(tmp_term)
+                }
+            }
+        }
+        Term::Succ(term1) => {
+            match *term1 {
+                Term::Pred(term2) => Term::Succ(Box::from(big_eval(Term::Pred(term2)))),
+                _ => *term1
+            }
+        }
+        term1 => term1
+    }
+}
+
+
