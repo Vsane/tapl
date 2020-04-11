@@ -28,6 +28,7 @@ impl fmt::Debug for Term {
     }
 }
 
+
 pub enum EvalError {
     NoRule(Term),
     NoElse(Term)
