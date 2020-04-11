@@ -8,3 +8,6 @@
   - Chapter 6: Nameless Representation of Terms
 - [untyped](./untyped)
   - Chapter 7: An ML Implementation of the Lambda-Calculus
+- [tyarith](./tyarith)
+  - Chapter 8: Typed Arithmetic Expressions
+
