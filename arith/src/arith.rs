@@ -19,11 +19,11 @@ impl fmt::Debug for Term {
         match self.clone() {
             Term::True => write!(f, "True"),
             Term::False => write!(f, "False"),
-            Term::If(ref t0, ref t1, ref t2) => write!(f, "(If {:?} {:?} {:?})", t0, t1, t2.as_ref().unwrap()),
+            Term::If(ref term1, ref term2, ref term3) => write!(f, "(If {:?} {:?} {:?})", term1, term2, term3.as_ref().unwrap()),
             Term::Zero => write!(f, "Zero"),
-            Term::Succ(ref t0) => write!(f, "(Succ {:?})", t0),
-            Term::Pred(ref t0) => write!(f, "(Pred {:?})", t0),
-            Term::IsZero(ref t0) => write!(f, "(IsZero {:?})", t0),
+            Term::Succ(ref term1) => write!(f, "(Succ {:?})", term1),
+            Term::Pred(ref term1) => write!(f, "(Pred {:?})", term1),
+            Term::IsZero(ref term1) => write!(f, "(IsZero {:?})", term1),
         }
     }
 }

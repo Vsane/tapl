@@ -9,5 +9,10 @@ name = "tapl"
 version = "0.1.0"
 dependencies = [
  "arith 0.1.0",
+ "untyped 0.1.0",
 ]
+
+[[package]]
+name = "untyped"
+version = "0.1.0"
 
