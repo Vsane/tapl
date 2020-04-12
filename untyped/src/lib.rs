@@ -19,7 +19,7 @@ mod tests {
         let mut parser = Parser::new(lex.result.into_iter());
         let out = parser.parse();
 
-        assert_eq!(format!("{:?}", eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()), "(λ.0)");
+        assert_eq!(format!("{:?}", eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()), "(λ x. x)");
 
 
         tmp_str = "(λ x. (x x)) (λ x. x)"; //(λ.0)
@@ -29,7 +29,7 @@ mod tests {
         parser = Parser::new(lex.result.into_iter());
         let out = parser.parse();
 
-        assert_eq!(format!("{:?}", eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()), "(λ.0)");
+        assert_eq!(format!("{:?}", eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()), "(λ x. x)");
 
 
         tmp_str = "((λ x.(λ y. (y x))) (λ x. x)) (λ x.(λ y. (y x)))"; // (λ.0)
@@ -39,7 +39,7 @@ mod tests {
         parser = Parser::new(lex.result.into_iter());
         let out = parser.parse();
 
-        assert_eq!(format!("{:?}", eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()), "(λ.(0 (λ.0)))");
+        assert_eq!(format!("{:?}", eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()), "(λ y. (y (λ x. x)))");
     }
 }
 

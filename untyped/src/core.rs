@@ -1,4 +1,5 @@
 use std::borrow::Borrow;
+use std::fmt;
 
 #[derive(Clone, Default, PartialEq, Debug)]
 pub struct Context {
@@ -44,6 +45,38 @@ impl Context {
     }
 }
 
+struct ContextTerm<'a> {
+    context: &'a Context,
+    term: &'a Term,
+}
+
+impl<'a>  ContextTerm<'a> {
+    fn new(ctx: &'a Context, t: &'a Term) -> Self {
+        ContextTerm {
+            context: ctx,
+            term: t
+        }
+    }
+}
+
+impl<'a> fmt::Display for ContextTerm<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let ContextTerm{ context, term} = *self;
+        match term.to_owned() {
+            Term::TmAbs(ref name,ref t1 ) => {
+                let (ctx1, name) = context.pick_fresh_name(name.as_ref());
+                write!(f, "(λ {}. {})", name, ContextTerm::new(&ctx1, t1))
+            }
+            Term::TmApp(t1, t2) => {
+                write!(f, "({} {})", ContextTerm::new(context, t1.as_ref()), ContextTerm::new(context, t2.as_ref()))
+            }
+            Term::TmVar(idx, _) => {
+                write!(f, "{}", context.index_to_name(idx).unwrap())
+            }
+        }
+    }
+}
+
 
 #[derive(Clone, PartialEq)]
 pub enum Term {
@@ -54,11 +87,7 @@ pub enum Term {
 
 impl std::fmt::Debug for Term {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Term::TmVar(idx, _) => write!(f, "{}", idx),
-            Term::TmAbs(_, tm) => write!(f, "(λ.{:?})", tm),
-            Term::TmApp(t1, t2) => write!(f, "({:?} {:?})", t1, t2),
-        }
+        write!(f, "{}", ContextTerm::new(&Context::new(), self))
     }
 }
 
