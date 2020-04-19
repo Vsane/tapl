@@ -2,7 +2,7 @@ use crate::syntax::{Context, Term};
 use crate::lexer::Token;
 use std::fmt::Debug;
 use std::collections::HashMap;
-use crate::builtin::{succ_term, pred_term, plus_term, sub_term};
+use crate::builtin::{suc_term, prd_term, plus_term, sub_term, mult_term};
 
 #[derive(Clone, PartialEq)]
 pub struct Parser<T: Iterator<Item = Token> + Debug + Clone> {
@@ -69,10 +69,12 @@ impl<T> Parser<T>
 
     pub fn parse_if_then_expr(&mut self) -> Option<Term> {
         self.next_token(); //If
+        println!("{:?}", self.tok0);
+
         let cond = self.atom();
         self.next_token(); //then
         let then_expr = self.atom();
-
+        println!("{:?}", self.tok0);
         if self.tok0 == Some(Token::Else) {
             self.next_token(); //else
             let else_expr = self.atom();
@@ -82,6 +84,7 @@ impl<T> Parser<T>
     }
 
     fn atom(&mut self) -> Option<Term> {
+        //println!("{:?}", self.tok0);
         match self.tok0.clone() {
             Some(Token::LParen) => {
                 self.next_token();
@@ -95,19 +98,49 @@ impl<T> Parser<T>
             }
             Some(Token::Succ) => {
                 self.next_token();
-                Some(succ_term())
+                let tmp = self.atom().unwrap();
+                Some(Term::Succ(Box::from(tmp)))
             }
             Some(Token::Pred) => {
                 self.next_token();
-                Some(pred_term())
+                Some(Term::Pred(Box::from(self.atom().unwrap())))
+            }
+            Some(Token::Suc) => {
+                self.next_token();
+                Some(suc_term())
+            }
+            Some(Token::Prd) => {
+                self.next_token();
+                Some(prd_term())
             }
             Some(Token::Plus) => {
                 self.next_token();
                 Some(plus_term())
             }
+            Some(Token::Mult) => {
+                self.next_token();
+                Some(mult_term())
+            }
             Some(Token::Sub) => {
                 self.next_token();
                 Some(sub_term())
+            }
+            Some(Token::True) => {
+                self.next_token();
+                Some(Term::True)
+            }
+            Some(Token::False) => {
+                self.next_token();
+                Some(Term::False)
+            }
+            Some(Token::Zero) => {
+                self.next_token();
+                Some(Term::Zero)
+            }
+            Some(Token::IsZero) => {
+                self.next_token();
+                let tmp = self.atom().unwrap();
+                Some(Term::IsZero(Box::from(tmp)))
             }
             Some(Token::If) => {
                 self.parse_if_then_expr()
@@ -123,7 +156,6 @@ impl<T> Parser<T>
             }
             _ => None
         }
-        unimplemented!()
     }
 
     fn application(&mut self) -> Option<Term> {

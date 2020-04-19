@@ -46,7 +46,6 @@ impl Context {
 }
 
 
-
 #[derive(Clone, PartialEq, Debug)]
 pub enum Term {
     True,
@@ -65,8 +64,21 @@ pub enum Term {
 
 
 
+
 fn shift_walk(d: isize, c: isize, t: &Term) -> Term {
     match t.to_owned() {
+        Term::IsZero(num) => {
+            Term::IsZero(num)
+        }
+        Term::True => Term::True,
+        Term::False => Term::False,
+        Term::Zero => Term::Zero,
+        Term::Succ(num) => {
+            Term::Succ(num)
+        }
+        Term::Pred(num) => {
+            Term::Pred(num)
+        }
         Term::TmVar(idx, n) => {
             if idx >= c {
                 Term::TmVar(idx + d, n + d)
@@ -96,13 +108,23 @@ fn shift_walk(d: isize, c: isize, t: &Term) -> Term {
         Term::TmApp(term1, term2) => {
             Term::TmApp(Box::new(shift_walk(d, c, term1.as_ref())), Box::new(shift_walk(d, c, term2.as_ref())))
         }
-        _ => Term::True
     }
 }
 
 fn subst_walk(j : isize, s: &Term, c: isize, t: &Term) -> Term {
-
     match t.to_owned() {
+        Term::IsZero(num) => {
+            Term::IsZero(num)
+        }
+        Term::True => Term::True,
+        Term::False => Term::False,
+        Term::Zero => Term::Zero,
+        Term::Succ(num) => {
+            Term::Succ(num)
+        }
+        Term::Pred(num) => {
+            Term::Pred(num)
+        }
         Term::TmVar(idx, n) => {
             if idx == j + c {
                 shift(c, s)
@@ -131,7 +153,6 @@ fn subst_walk(j : isize, s: &Term, c: isize, t: &Term) -> Term {
             Box::new(subst_walk(j, s, c, term1.as_ref())),
             Box::new(subst_walk(j, s, c, term2.as_ref())),
         ),
-        _ => Term::True
     }
 }
 
@@ -147,6 +168,7 @@ pub fn is_val(t: &Term) -> bool {
     match t {
         &Term::Number(_) => true,
         &Term::TmAbs(_, _) => true,
+        &Term::True | &Term::False => true,
         _ => false,
     }
 }

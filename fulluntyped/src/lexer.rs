@@ -16,6 +16,8 @@ pub enum Token {
     Then,
     Else,
 
+    Prd,
+    Suc,
     Sub,
     Mult,
     Plus,
@@ -36,7 +38,10 @@ fn get_keywords() -> HashMap<String, Token> {
     result.insert(String::from("false"), Token::False);
     result.insert(String::from("succ"), Token::Succ);
     result.insert(String::from("pred"), Token::Pred);
+    result.insert(String::from("suc"), Token::Suc);
+    result.insert(String::from("prd"), Token::Prd);
     result.insert(String::from("then"), Token::Then);
+    result.insert(String::from("plus"), Token::Plus);
 
     result
 }

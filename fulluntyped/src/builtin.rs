@@ -15,11 +15,11 @@ fn ret_term(tmp_str:&str) -> Term {
     eval(out.unwrap().borrow(), parser.ctx.borrow()).unwrap()
 }
 
-pub fn succ_term() -> Term {
+pub fn suc_term() -> Term {
     ret_term("(λn.λf.λx.f (n f x))")
 }
 
-pub fn pred_term() -> Term {
+pub fn prd_term() -> Term {
     ret_term("(λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u))")
 }
 
