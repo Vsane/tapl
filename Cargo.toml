@@ -10,3 +10,4 @@ edition = "2018"
 arith = {path = "./arith", version = "0.1.0"}
 untyped = {path = "./untyped", version = "0.1.0"}
 fulluntyped = {path = "./fulluntyped", version = "0.1.0"}
+tyarith = {path = "./tyarith", version = "0.1.0"}

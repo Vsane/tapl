@@ -14,8 +14,13 @@ version = "0.1.0"
 dependencies = [
  "arith 0.1.0",
  "fulluntyped 0.1.0",
+ "tyarith 0.1.0",
  "untyped 0.1.0",
 ]
+
+[[package]]
+name = "tyarith"
+version = "0.1.0"
 
 [[package]]
 name = "untyped"
