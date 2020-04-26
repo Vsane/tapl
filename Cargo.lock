@@ -9,11 +9,16 @@ name = "fulluntyped"
 version = "0.1.0"
 
 [[package]]
+name = "simplebool"
+version = "0.1.0"
+
+[[package]]
 name = "tapl"
 version = "0.1.0"
 dependencies = [
  "arith 0.1.0",
  "fulluntyped 0.1.0",
+ "simplebool 0.1.0",
  "tyarith 0.1.0",
  "untyped 0.1.0",
 ]
