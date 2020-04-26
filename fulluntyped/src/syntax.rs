@@ -1,5 +1,4 @@
 use std::borrow::Borrow;
-use std::fmt;
 
 #[derive(Clone, Default, PartialEq, Debug)]
 pub struct Context {

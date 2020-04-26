@@ -1,10 +1,8 @@
 use crate::syntax::Term;
-use crate::syntax::Term::{TmAbs, TmApp, Succ};
-use crate::lexer::{Lexer, Token};
+use crate::lexer::{Lexer};
 use crate::parser::Parser;
 use crate::core::eval;
 use std::borrow::Borrow;
-use std::collections::HashMap;
 
 fn ret_term(tmp_str:&str) -> Term {
     let mut lex = Lexer::new(tmp_str.chars());

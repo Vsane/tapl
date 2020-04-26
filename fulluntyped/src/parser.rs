@@ -1,7 +1,6 @@
 use crate::syntax::{Context, Term};
 use crate::lexer::Token;
 use std::fmt::Debug;
-use std::collections::HashMap;
 use crate::builtin::{suc_term, prd_term, plus_term, sub_term, mult_term};
 
 #[derive(Clone, PartialEq)]
@@ -69,12 +68,12 @@ impl<T> Parser<T>
 
     pub fn parse_if_then_expr(&mut self) -> Option<Term> {
         self.next_token(); //If
-        println!("{:?}", self.tok0);
+        //println!("{:?}", self.tok0);
 
         let cond = self.atom();
         self.next_token(); //then
         let then_expr = self.atom();
-        println!("{:?}", self.tok0);
+        //println!("{:?}", self.tok0);
         if self.tok0 == Some(Token::Else) {
             self.next_token(); //else
             let else_expr = self.atom();
